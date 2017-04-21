@@ -1,0 +1,16 @@
+{% extends "./widget-form-base.html" %}
+
+{% block field %}
+<label for="id_{{field.name}}" class="col-sm-3 control-label">{{ field.label }}</label>
+<div class="col-sm-9">{{ field }}{% if field.errors %}
+    <span class="help-block">{% for error in field.errors %}{{ error }}{% endfor %}</span>
+{% endif %}</div>
+{% endblock %}
+
+{% block submit %}
+<div class="form-group">
+    <div class="col-lg-9 col-md-offset-3">
+        <button type="submit" class="btn btn-primary">提交</button>
+    </div>
+</div>
+{% endblock %}

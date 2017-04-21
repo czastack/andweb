@@ -1,0 +1,15 @@
+{%for field in form%}
+{% if field.is_hidden %}
+    {{ field }}{% if field.errors %}<span class="help-block">{% for error in field.errors %}{{ error }}{% endfor %}</span>{% endif %}
+{% else %}
+    <div class="form-group{% if field.errors %} has-error{% endif %}">
+        {% block field %}{% endblock %}
+    </div>
+{% endif %}
+{%endfor%}
+{%if err%}<p class="help-text text-danger">{{err}}</p>{%endif%}
+{%if not nosubmit %}{% block submit %}
+<div class="form-group">
+    <input type="submit" value="提交" class="btn btn-primary">
+</div>
+{% endblock %}{% endif %}

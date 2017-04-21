@@ -1,0 +1,10 @@
+{% extends "./widget-form-base.html" %}
+
+{% block field %}
+<div>
+    {{ field }}
+    {% if field.errors %}
+    <span class="help-block">{% for error in field.errors %}{{ error }}{% endfor %}</span>
+    {% endif %}
+</div>
+{% endblock %}
