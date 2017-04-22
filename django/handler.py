@@ -52,7 +52,7 @@ class BaseHandler(Handler):
 
     @classmethod
     def forward(cls, request, url):
-        query_string = request.META('QUERY_STRING', None)
+        query_string = request.META.get('QUERY_STRING', None)
         if query_string:
             url += '?' + query_string
         return cls.redirect(url)

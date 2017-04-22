@@ -56,16 +56,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'apps.wsgi.application'
 
-DATABASE_BASE = {
-    'ENGINE': 'django.db.backends.mysql',
-    'USER':'root',
-    'PASSWORD':'root',
-    'HOST':'',
-    'PORT':'',
-}
-
-# DATABASE_ROUTERS = ['apps.db_router.DatabaseAppsRouter']
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
