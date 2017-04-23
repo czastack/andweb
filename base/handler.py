@@ -56,7 +56,7 @@ class Handler(object):
             if not url:
                 url = 'index'
             if redirect_dir:
-                return cls.forward(request, url + '/')
+                return cls.classforward(request, url + '/')
 
         if not route[-1]:
             route[-1] = 'index'
@@ -74,7 +74,7 @@ class Handler(object):
             and submodule.__package__ == submodule.__name__):
             i += 1
             if length is i and redirect_dir:
-                return cls.forward(request, '/%s/' % url)
+                return cls.classforward(request, '/%s/' % url)
             submodule = __import__(submodule.__name__, fromlist=[route[i]])
             submodule = getattr(submodule, route[i], None)
 
@@ -93,7 +93,7 @@ class Handler(object):
         if length is lv_module and redirect_dir:
             if url.endswith('/'):
                 url += 'index'
-            return cls.forward(request, '/%s/' % url)
+            return cls.classforward(request, '/%s/' % url)
 
         name = route[lv_module]
         v = lambda n: (n, getattr(module, n)) if hasattr(module, n) else None
@@ -117,7 +117,7 @@ class Handler(object):
             if name == settings.HANDLE_CLASS_DEFAULT:
                 lv_class -= 1
             if length <= lv_class and redirect_dir:
-                return cls.forward(request, '/%s/' % url)
+                return cls.classforward(request, '/%s/' % url)
             action = route[lv_class] # 方法名
             method = getattr(callee, action, None) or getattr(callee, 'default', None)
             if method:
@@ -265,8 +265,11 @@ class Handler(object):
     def toaction(self, action):
         return self.redirect(self.action(action))
 
-    @staticmethod
-    def forward(request, url):
+    def forward(self, url):
+        return self.classforward(self.request, url)
+
+    @classmethod
+    def classforward(cls, request, url):
         raise NotImplementedError
 
     @staticmethod

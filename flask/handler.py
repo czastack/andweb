@@ -42,7 +42,7 @@ class BaseHandler(Handler):
         app.view_functions[endpoint] = delegate
 
     @classmethod
-    def forward(cls, request, url):
+    def classforward(cls, request, url):
         query_string = request.query_string
         if query_string:
             url += '?' + str(query_string)

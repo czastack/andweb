@@ -51,7 +51,7 @@ class BaseHandler(Handler):
         subpatterns.append(url_t(url + '$', delegate))
 
     @classmethod
-    def forward(cls, request, url):
+    def classforward(cls, request, url):
         query_string = request.META.get('QUERY_STRING', None)
         if query_string:
             url += '?' + query_string
@@ -63,6 +63,12 @@ class BaseHandler(Handler):
 
     def json(self, obj):
         return HttpResponse(json.dumps(obj), content_type="application/json")
+
+    def get_or_404(self, model, msg='', **query):
+        try:
+            return model.objects.get(**query)
+        except model.DoesNotExist:
+            self.raise404(msg)
 
     @property
     def _query_dict(self):

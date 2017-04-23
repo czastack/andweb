@@ -39,5 +39,8 @@ class BaseModel(models.Model):
                 value = self._get_FIELD_display(field)
             yield field.name, field.verbose_name, value
 
+    def iter_value(self, fields=None, exclude=None):
+        return ((field.name, getattr(self, field.name)) for field in self.iter_field(fields, exclude))
+
     def to_dict(self, *args, **kwargs):
         return model_to_dict(self, *args, **kwargs)
