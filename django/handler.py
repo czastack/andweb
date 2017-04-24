@@ -48,7 +48,7 @@ class BaseHandler(Handler):
 
     @staticmethod
     def save_route(url, delegate):
-        subpatterns.append(url_t(url + '$', delegate))
+        subpatterns.append(url_t('^%s$' % url, delegate))
 
     @classmethod
     def classforward(cls, request, url):
