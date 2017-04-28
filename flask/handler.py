@@ -52,7 +52,7 @@ class BaseHandler(Handler):
         return render(tpl, **data)
 
     @property
-    def _query_dict(self):
+    def query_dict(self):
         return self.request.values
 
     @property

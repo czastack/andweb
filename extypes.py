@@ -23,8 +23,11 @@ def puts(dst, src, keys=None):
     更新dict全部或指定字段
     dst: 模板dict, src: 来源dict
     """
-    for key in keys or src:
-        dst[key] = src[key]
+    if keys:
+        for key in keys:
+            dst[key] = src[key]
+    else:
+        dst.update(src)
 
 
 def append_or(dic, key, value):
@@ -38,7 +41,7 @@ class Map(dict):
     __slots__ = ()
 
     def __getattr__(self, name):
-        return self.get(name, None)
+        return self.get(name)
 
     def __setattr__(self, name, value):
         self[name] = value
@@ -57,14 +60,17 @@ class Dict(object):
     """
     __slots__ = ('_data',)
 
-    def __init__(self, obj = None):
+    def __init__(self, obj=None):
         self._attr('_data', obj)
 
     def _attr(self, name, value):
         object.__setattr__(self, name, value)
 
     def __getattr__(self, name):
-        return self._data.get(name, getattr(self._data, name, None))
+        try:
+            return self._data[name]
+        except KeyError:
+            return getattr(self._data, name)
 
     def __setattr__(self, name, value):
         self._data[name] = value
@@ -74,6 +80,9 @@ class Dict(object):
 
     def __iter__(self):
         return self._data.__iter__()
+
+    def __bool__(self):
+        return bool(self._data)
 
     def __getitem__(self, key):
         if isinstance(key, (list, tuple)):
@@ -112,19 +121,19 @@ class Dicts(object):
     for data in datas:
         print(data.a)
     """
-    __slots__ = ('_ref', 'data')
+    __slots__ = ('_ref', '_data')
 
     def __init__(self, array):
-        if isinstance(array, (list, tuple)):
-            self._ref = None
-            self.data = array
-        else:
-            raise TypeError('array must be a list or tuple')
+        self._ref = None
+        self._data = array
 
     def __iter__(self):
         if not self._ref:
             self._ref = Dict()
         
-        for item in self.data:
+        for item in self._data:
             self._ref.__init__(item)
             yield self._ref
+
+    def __bool__(self):
+        return bool(self._data)

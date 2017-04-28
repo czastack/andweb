@@ -71,7 +71,7 @@ class BaseHandler(Handler):
             self.raise404(msg)
 
     @property
-    def _query_dict(self):
+    def query_dict(self):
         request = self.request
         return getattr(request, request.method, request.GET)
 

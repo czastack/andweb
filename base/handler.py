@@ -53,6 +53,8 @@ class Handler(object):
         redirect_dir = getattr(settings, 'REDIRECT_DIR', True)
 
         if length is 1:
+            if url == 'favicon.ico':
+                cls.raise404()
             if not url:
                 url = 'index'
             if redirect_dir:
@@ -66,7 +68,14 @@ class Handler(object):
         # 调用对应的类或函数
         route_flag = 0
         i = 1
-        module = __import__(settings.APP_PREFIX + route[0], fromlist=[route[i]])
+        name = settings.APP_PREFIX + route[0]
+        try:
+            module = __import__(name, fromlist=[route[i]])
+        except ImportError as e:
+            if e.name == name:
+                cls.raise404()
+            else:
+                raise e
         submodule = getattr(module, route[i], None)
         
         # 找到末层子包
@@ -128,8 +137,8 @@ class Handler(object):
         else:
             cls.raise404()
         if delegate:
-            cls.save_route(url, delegate)
             result = delegate(request)
+            cls.save_route(url, delegate)
         return result
 
 
@@ -226,18 +235,18 @@ class Handler(object):
 
     def get_arg(self, key, default=ARG_NONE):
         """获取参数，包括get和form"""
-        args = self._query_dict
+        args = self.query_dict
         value = args.get(key, default)
         if value is ARG_NONE:
             raise ValueError('miss arg ' + key)
         return value
 
     def get_args(self, keys):
-        args = self._query_dict
+        args = self.query_dict
         return extypes.Map({key: args.get(key, '') for key in keys})
 
     def get_args_adv(self, keys, default=ARG_NONE):
-        args = self._query_dict
+        args = self.query_dict
         data = extypes.Dict({})
         for key in keys:
             if isinstance(key, (list, tuple)):
